@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/candidate")
@@ -56,12 +58,14 @@ public class CandidateController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteCandidate(@PathVariable String id){
+    public ResponseEntity<Map<String,String>> deleteCandidate(@PathVariable String id){
         Candidate findCandidate = this.candidateService.getById(id);
 
         if(findCandidate != null){
             this.candidateService.delete(id);
-            return "Candidate with id " + id + " was deleted";
+            Map<String, String> mapResponse = new HashMap<>();
+            mapResponse.put("message", "Candidate with id " + id + " was deleted");
+            return ResponseEntity.ok(mapResponse);
         }else{
             throw new NotFoundException("Candidate by id " + id + " not found");
         }
