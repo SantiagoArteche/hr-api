@@ -4,6 +4,7 @@ package art.humanresources.controller;
 import art.humanresources.exceptions.NotFoundException;
 import art.humanresources.model.Candidate;
 import art.humanresources.service.CandidateService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class CandidateController {
     }
 
     @PutMapping("/{id}")
-    public Candidate updateCandidate(@RequestBody Candidate candidate, @PathVariable String id){
+    public ResponseEntity<Candidate> updateCandidate(@RequestBody Candidate candidate, @PathVariable String id){
         Candidate findCandidate = this.candidateService.getById(id);
 
         if(findCandidate != null){
@@ -48,7 +49,7 @@ public class CandidateController {
             findCandidate.setCountry(candidate.getCountry());
             findCandidate.setRequestedSalary(candidate.getRequestedSalary());
             this.candidateService.create(findCandidate);
-            return findCandidate;
+            return ResponseEntity.ok(findCandidate);
         }else{
             throw new NotFoundException("Candidate by id " + id + " not found");
         }
